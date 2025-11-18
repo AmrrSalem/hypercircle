@@ -45,12 +45,19 @@ const Contact = () => {
     setStatus({ type: null, message: '' });
 
     try {
-      // EmailJS configuration
-      // NOTE: Replace these with your actual EmailJS credentials
-      // Get your credentials from https://www.emailjs.com/
-      const serviceId = 'YOUR_SERVICE_ID'; // Replace with your EmailJS service ID
-      const templateId = 'YOUR_TEMPLATE_ID'; // Replace with your EmailJS template ID
-      const publicKey = 'YOUR_PUBLIC_KEY'; // Replace with your EmailJS public key
+      // EmailJS configuration from environment variables
+      // See .env.example for setup instructions
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      // Validate that credentials are configured
+      if (!serviceId || !templateId || !publicKey ||
+          serviceId === 'YOUR_SERVICE_ID' ||
+          templateId === 'YOUR_TEMPLATE_ID' ||
+          publicKey === 'YOUR_PUBLIC_KEY') {
+        throw new Error('EmailJS credentials not configured. Please set up your .env file.');
+      }
 
       await emailjs.send(
         serviceId,
@@ -81,10 +88,13 @@ const Contact = () => {
       });
     } catch (error) {
       console.error('Error sending email:', error);
+      const errorMessage = error instanceof Error && error.message.includes('EmailJS credentials')
+        ? 'The contact form is currently being configured. Please email us directly at contact@hypercircle.com'
+        : 'Sorry, there was an error sending your message. Please try again or contact us directly at contact@hypercircle.com';
+
       setStatus({
         type: 'error',
-        message:
-          'Sorry, there was an error sending your message. Please try again or contact us directly at contact@hypercircle.com',
+        message: errorMessage,
       });
     } finally {
       setLoading(false);

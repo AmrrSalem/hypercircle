@@ -44,14 +44,24 @@ A modern, professional website for hyperCircle - an AI, Data Science, and Softwa
    ```
 
 3. **Configure EmailJS** (for contact form)
+   - Copy the environment template:
+     ```bash
+     cp .env.example .env
+     ```
    - Sign up at [EmailJS](https://www.emailjs.com/)
-   - Create a new email service
-   - Create an email template
-   - Update the credentials in `src/pages/Contact.tsx`:
-     ```typescript
-     const serviceId = 'YOUR_SERVICE_ID';
-     const templateId = 'YOUR_TEMPLATE_ID';
-     const publicKey = 'YOUR_PUBLIC_KEY';
+   - Create a new email service (Gmail, Outlook, etc.)
+   - Create an email template with these variables:
+     - `{{from_name}}` - Sender's name
+     - `{{from_email}}` - Sender's email
+     - `{{company}}` - Company name
+     - `{{phone}}` - Phone number
+     - `{{service}}` - Service of interest
+     - `{{message}}` - Message content
+   - Update the credentials in `.env`:
+     ```bash
+     VITE_EMAILJS_SERVICE_ID=your_actual_service_id
+     VITE_EMAILJS_TEMPLATE_ID=your_actual_template_id
+     VITE_EMAILJS_PUBLIC_KEY=your_actual_public_key
      ```
 
 4. **Run development server**
